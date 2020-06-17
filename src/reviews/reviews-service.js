@@ -1,4 +1,6 @@
-const xss = require('xss')
+'use strict';
+
+const xss = require('xss');
 
 const ReviewsService = {
   getById(db, id) {
@@ -24,13 +26,9 @@ const ReviewsService = {
           ) AS "user"`
         )
       )
-      .leftJoin(
-        'thingful_users AS usr',
-        'rev.user_id',
-        'usr.id',
-      )
+      .leftJoin('thingful_users AS usr', 'rev.user_id', 'usr.id')
       .where('rev.id', id)
-      .first()
+      .first();
   },
 
   insertReview(db, newReview) {
@@ -39,9 +37,7 @@ const ReviewsService = {
       .into('thingful_reviews')
       .returning('*')
       .then(([review]) => review)
-      .then(review =>
-        ReviewsService.getById(db, review.id)
-      )
+      .then((review) => ReviewsService.getById(db, review.id));
   },
 
   serializeReview(review) {
@@ -52,8 +48,8 @@ const ReviewsService = {
       thing_id: review.thing_id,
       date_created: review.date_created,
       user: review.user || {},
-    }
-  }
-}
+    };
+  },
+};
 
-module.exports = ReviewsService
+module.exports = ReviewsService;
